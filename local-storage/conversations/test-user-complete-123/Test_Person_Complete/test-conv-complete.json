@@ -1,0 +1,12 @@
+{
+  "id": "test-conv-complete",
+  "userId": "test-user-complete-123",
+  "personName": "Test Person Complete",
+  "timestamp": "2025-10-15T08:32:13.703Z",
+  "audioPath": "/mock/path",
+  "transcript": "[Audio transcription placeholder for test.mp3] This is a mock transcription that would be generated from the audio file. In a real implementation, this would be replaced with actual speech-to-text processing.",
+  "summary": "Conversation with Test Person Complete: [Audio transcription placeholder for test.mp3] This is a mock transcription that would be generated from the audio file. In a real implementation, thi...",
+  "duration": 0,
+  "processingStatus": "completed",
+  "metadata": {}
+}
