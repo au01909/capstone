@@ -37,6 +37,7 @@ const userRoutes = require('./routes/users');
 
 // Import offline services
 const cleanupService = require('./services/cleanupService');
+const offlineAiService = require('./services/offlineAiService');
 
 // ✅ Import watcher (NEW)
 const { initWatcher } = require('./services/watcher');
@@ -116,12 +117,49 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/dementia-
 
     // Start offline services after DB connection
     try {
-      cleanupService.start();
-      logger.info('Offline services started successfully');
+      // Initialize offline AI services (models, clients)
+      offlineAiService.initializeServices()
+        .then(() => {
+          logger.info('Offline AI services initialized');
 
-      // ✅ Start watcher after DB connection
-      initWatcher();
-      logger.info('Local-storage watcher started successfully');
+          // Start cleanup service if it exists
+          if (cleanupService && typeof cleanupService.start === 'function') {
+            try {
+              cleanupService.start();
+              logger.info('Cleanup service started');
+            } catch (err) {
+              logger.warn('Failed to start cleanup service:', err.message);
+            }
+          }
+
+          // Start watcher after offline AI services are ready
+          try {
+            initWatcher();
+            logger.info('Local-storage watcher started successfully');
+          } catch (err) {
+            logger.warn('Failed to start watcher:', err.message);
+          }
+        })
+        .catch(initErr => {
+          logger.error('Failed to initialize offline AI services:', initErr);
+
+          // Still attempt to start cleanup and watcher in degraded mode
+          try {
+            if (cleanupService && typeof cleanupService.start === 'function') {
+              cleanupService.start();
+              logger.info('Cleanup service started (degraded)');
+            }
+          } catch (err) {
+            logger.warn('Failed to start cleanup service (degraded):', err.message);
+          }
+
+          try {
+            initWatcher();
+            logger.info('Local-storage watcher started (degraded)');
+          } catch (err) {
+            logger.warn('Failed to start watcher (degraded):', err.message);
+          }
+        });
     } catch (error) {
       logger.error('Error starting offline services:', error);
     }

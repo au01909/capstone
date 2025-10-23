@@ -33,7 +33,7 @@ Download from [ollama.ai](https://ollama.ai/download)
 
 ```bash
 # Download a lightweight LLM model (recommended for local use)
-ollama pull llama3.1:8b
+ollama pull llama3.1:8bx 
 
 # Alternative: Download smaller model for lower-end systems
 ollama pull llama3.1:3b
@@ -61,7 +61,7 @@ npm install
 ```bash
 # Copy the offline environment template
 cd server
-cp env.offline.example .env
+cp env.offline.example.env
 ```
 
 Edit `.env` file with your configuration:
@@ -71,7 +71,7 @@ Edit `.env` file with your configuration:
 MONGODB_URI=mongodb://localhost:27017/dementia-care
 
 # JWT Secret (change this!)
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_SECRET=mullu-is-gay
 
 # Ollama Configuration
 OLLAMA_BASE_URL=http://localhost:11434
